@@ -32,7 +32,7 @@
         <div class="bg-white rounded-xl p-3 shadow border border-gray-200 flex justify-between items-center px-4">
             <div class="flex items-center space-x-2">
                 <span class="bg-red-700 text-white font-bold px-3 py-1 rounded-full text-xs">Post-test Only</span>
-                <span id="refreshTimerText" class="text-xs text-gray-500">ดึงข้อมูลสดผ่าน API...</span>
+                <span id="refreshTimerText" class="text-xs text-gray-500">ดึงข้อมูลสดผ่าน API ปลอดภัย CORS...</span>
             </div>
             <button type="button" onclick="fetchDashboardData()" class="flex items-center bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg px-2.5 py-1 text-xs font-semibold text-gray-600 transition">
                 🔄 รีเฟรชข้อมูล
@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <!-- โซนที่ 2: ตารางรายชื่อผู้สอบทั้งหมด แสดงแค่ชื่อผลการสอบผ่าน/ไม่ผ่าน -->
+        <!-- โซนที่ 2: ตารางรายชื่อผู้สอบทั้งหมด -->
         <div class="bg-white rounded-2xl p-4 shadow-lg border border-gray-200">
             <h2 class="text-base sm:text-lg font-bold text-gray-700 mb-3">
                 👥 รายชื่อผู้เข้ารับการทดสอบทั้งหมดในคลาสเรียน
@@ -131,27 +131,31 @@
     </div>
 
     <script>
-        // ⚠️ นำลิงก์ Web App URL ตัวล่าสุดของ GAS มาใส่ตรงนี้
-        const API_URL = "https://script.google.com/macros/s/AKfycby4bJd-PrU1J3UDsFDgENvVY0ETGOpbbes79E5AJA5gO2IhFQ4gexxB5EW58dcsw1to/exec";
+        // ใช้ลิงก์เดิมที่ระบบเคยเชื่อมโยงสำเร็จ
+        const API_URL = "https://script.google.com/macros/s/AKfycbzBWZmNQSCVmn-udAA4it3q9df-lmGo3jYla0borkgbTnrjD2R08Qdwj-1KVQk4zX9y/exec";
 
         function fetchDashboardData() {
             const timerText = document.getElementById('refreshTimerText');
-            timerText.innerText = "🔄 กำลังยิงดึงข้อมูลแบบเรียลไทม์...";
+            timerText.innerText = "🔄 กำลังอัปเดตข้อมูลผ่านการส่งข้าม CORS...";
             timerText.className = "text-red-600 font-medium";
 
-            // ใช้คำสั่ง fetch ดึงข้อมูลผ่านสถาปัตยกรรมสากล ปลอดภัยและไม่ค้างคา
-            fetch(API_URL)
-                .then(response => response.json())
-                .then(data => {
-                    renderDashboard(data);
-                    timerText.innerText = "รีเฟรชข้อมูลอัตโนมัติทุกๆ 15 วินาที";
-                    timerText.className = "text-gray-500";
-                })
-                .catch(err => {
-                    console.error("Error:", err);
-                    timerText.innerText = "⚠️ เชื่อมต่อ API ล้มเหลว";
-                    timerText.className = "text-red-500 font-bold";
-                });
+            // สลับยิงคำขอผ่านช่องทาง POST เพื่อสยบบั๊กนโยบายบล็อก CORS ของเบราว์เซอร์
+            fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ 'action': 'fetchData' }).toString()
+            })
+            .then(response => response.json())
+            .then(data => {
+                renderDashboard(data);
+                timerText.innerText = "รีเฟรชข้อมูลอัตโนมัติทุกๆ 15 วินาที";
+                timerText.className = "text-gray-500";
+            })
+            .catch(err => {
+                console.error("Fetch Error:", err);
+                timerText.innerText = "⚠️ การดึงข้อมูลล่าช้า กำลังลองใหม่ในลูปถัดไป";
+                timerText.className = "text-red-500 font-semibold";
+            });
         }
 
         function resetLeaderboardToPlaceholder() {
@@ -221,7 +225,6 @@
                 });
             }
 
-            // 2. เรนเดอร์รายชื่อพนักงานทั้งหมด (แสดงผลเฉพาะคอลัมน์ E ผ่าน/ไม่ผ่าน ตามเงื่อนไขบรีฟ)
             if (!data || !data.allStudents || data.allStudents.length === 0) {
                 tableBody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400 italic">ไม่มีรายชื่อผู้ลงทะเบียนทดสอบในฐานข้อมูล</td></tr>`;
             } else {
@@ -255,9 +258,7 @@
             }
         }
 
-        // รันคำสั่งดึงข้อมูลทันทีเมื่อโหลดหน้าเว็บ
         fetchDashboardData();
-        // รีเฟรชอัตโนมัติเบื้องหลังทุกๆ 15 วินาที
         setInterval(fetchDashboardData, 15000);
     </script>
 </body>
