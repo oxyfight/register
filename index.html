@@ -1,214 +1,264 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>ระบบลงทะเบียนออนไลน์ - OXFIGHT CENTER</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { --primary-color: #071f54; --card-bg: rgba(255, 255, 255, 0.96); }
-    * { box-sizing: border-box; font-family: 'Sarabun', sans-serif !important; }
-    body { min-height: 100vh; background: linear-gradient(135deg, #f4f8ff 0%, #eaf3ff 100%); color: #1f2937; }
-    .page-shell { width: 100%; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .form-container { width: min(100%, 760px); background: var(--card-bg); padding: 40px; border-radius: 28px; box-shadow: 0 28px 80px rgba(7,31,84,0.15); position: relative; overflow: hidden; }
-    .form-container::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 9px; background: linear-gradient(90deg, #071f54, #1976d2); }
-    .header { text-align: center; margin-bottom: 30px; }
-    .header img { max-width: 240px; height: auto; }
-    #successOverlay { display: none; position: absolute; inset: 0; background: rgba(255, 255, 255, 0.99); z-index: 100; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 36px; }
-    .form-label { font-weight: 700; color: #233044; }
-    .form-control, .form-select { min-height: 50px; border-radius: 14px; border: 1px solid #d7e2f2; }
-    .btn-submit { background: linear-gradient(135deg, #1976d2, #071f54); border: none; padding: 15px; border-radius: 999px; width: 100%; color: white; font-weight: 800; transition: 0.2s; }
-    .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
-    .confirm-label { font-weight: 800; color: #52637a; width: 130px; display: inline-block; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STOP THE BLEED® - All-Time Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #f3f4f6; }
+        .bg-gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .bg-red-card { background-color: #fef2f2; border: 1px solid #fee2e2; }
+        .badge-pulse { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen text-gray-800 p-3 sm:p-6 flex flex-col items-center">
 
-  <main class="page-shell">
-    <div class="form-container">
-      
-      <div id="successOverlay">
-        <div style="font-size: 80px;" class="mb-2">✅</div>
-        <h2 class="text-success fw-bold mb-1">ลงทะเบียนสำเร็จ!</h2>
-        <p class="text-muted">โปรดแคปหน้าจอเก็บรหัสลงทะเบียนนี้ไว้แสดงต่อเจ้าหน้าที่หน้างาน</p>
-        <div class="p-4 bg-light rounded-4 w-100 mb-4 border text-center shadow-sm" style="max-width: 450px;">
-          <span id="displayResId" class="text-primary fw-bold fs-1" style="letter-spacing: 2px;"></span>
+    <div class="w-full max-w-2xl space-y-5">
+        
+        <!-- ส่วนหัวบอร์ดและสปอตโลโก้หลักสูตร -->
+        <div class="flex flex-col items-center bg-white rounded-2xl p-5 shadow-lg border-b-4 border-red-700">
+            <img src="https://knfhgytkfshdmfdieczx.supabase.co/storage/v1/object/public/pic/STOP%20THE%20BLEED%20BIG%20LOGO.png" 
+                 alt="STOP THE BLEED®" class="h-12 sm:h-16 object-contain">
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-800 mt-2">📊 ทำเนียบผลการเรียนรู้และจัดอันดับ</h1>
         </div>
-        <div class="alert alert-info py-2 px-4 rounded-pill small mb-4">📧 ระบบได้จัดส่ง QR Code ยืนยันเข้าสู่อีเมลของท่านแล้ว</div>
-        <button class="btn btn-outline-secondary rounded-pill px-5 fw-bold" onclick="location.reload()">ลงทะเบียนคนถัดไป</button>
-      </div>
 
-      <div class="header">
-        <img src="https://knfhgytkfshdmfdieczx.supabase.co/storage/v1/object/public/pic/OXYFIGHT_CENTER.png" alt="OXFIGHT CENTER LOGO">
-        <h4 class="mt-3 fw-bold text-primary">ระบบลงทะเบียนเข้ารับการฝึกอบรมออนไลน์</h4>
-        <p class="text-muted small">กรุณากรอกข้อมูลส่วนบุคคลให้ถูกต้องเพื่อใช้ในการออกวุฒิบัตร</p>
-      </div>
+        <!-- แถบสถานะรีเฟรชอัปเดตข้อมูลอัตโนมัติ และปุ่มกดดึงแมนนวล -->
+        <div class="bg-white rounded-xl p-3 shadow border border-gray-200 flex justify-between items-center px-4">
+            <div class="flex items-center space-x-2">
+                <span class="bg-red-700 text-white font-bold px-3 py-1 rounded-full text-xs">Post-test Only</span>
+                <span id="refreshTimerText" class="text-xs text-gray-500">ดึงข้อมูลสดผ่าน API...</span>
+            </div>
+            <button type="button" onclick="fetchDashboardData()" class="flex items-center bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg px-2.5 py-1 text-xs font-semibold text-gray-600 transition">
+                🔄 รีเฟรชข้อมูล
+            </button>
+        </div>
 
-      <form id="regForm" onkeydown="return event.key != 'Enter';">
-        <div class="row">
-          <div class="col-md-4 mb-3">
-            <label class="form-label">คำนำหน้าชื่อ</label>
-            <select class="form-select" id="inp_prefix" required>
-              <option value="">เลือก...</option>
-              <option value="นาย">นาย</option>
-              <option value="นาง">นาง</option>
-              <option value="นางสาว">นางสาว</option>
-            </select>
-          </div>
-          <div class="col-md-8 mb-3">
-            <label class="form-label">ชื่อ - นามสกุล (ภาษาไทย)</label>
-            <input type="text" class="form-control" id="inp_name" required placeholder="กรอกชื่อและนามสกุลจริง">
-          </div>
+        <!-- โซนที่ 1: ตารางทำเนียบยอดฝีมือ อันดับ 1-5 (คงที่ ไม่ยืดหด) -->
+        <div class="bg-white rounded-2xl p-4 shadow-lg border border-gray-200">
+            <h2 class="text-base sm:text-lg font-bold text-red-700 flex items-center mb-3">
+                🏆 อันดับผู้ทำคะแนนหลังเรียนสูงสุด (คะแนน > เวลา)
+            </h2>
+            
+            <div id="leaderboardContainer" class="space-y-3">
+                <!-- อันดับ 1 -->
+                <div id="rankCard-1" class="flex justify-between items-center p-3 rounded-xl bg-gray-50 border border-gray-200 opacity-40">
+                    <div class="flex items-center space-x-3 truncate">
+                        <div class="text-xl flex-shrink-0">🥇</div>
+                        <div class="truncate">
+                            <p class="text-sm font-semibold text-gray-400 italic">— รอข้อมูลผู้เรียนอันดับ 1 —</p>
+                            <p class="text-xxs text-gray-400 mt-0.5">⏱️ 0 วินาที</p>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0 pl-2 text-gray-400 font-bold text-base">0<span class="text-xxs">/10</span></div>
+                </div>
+                <!-- อันดับ 2 -->
+                <div id="rankCard-2" class="flex justify-between items-center p-3 rounded-xl bg-gray-50 border border-gray-200 opacity-40">
+                    <div class="flex items-center space-x-3 truncate">
+                        <div class="text-xl flex-shrink-0">🥈</div>
+                        <div class="truncate">
+                            <p class="text-sm font-semibold text-gray-400 italic">— รอข้อมูลผู้เรียนอันดับ 2 —</p>
+                            <p class="text-xxs text-gray-400 mt-0.5">⏱️ 0 วินาที</p>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0 pl-2 text-gray-400 font-bold text-base">0<span class="text-xxs">/10</span></div>
+                </div>
+                <!-- อันดับ 3 -->
+                <div id="rankCard-3" class="flex justify-between items-center p-3 rounded-xl bg-gray-50 border border-gray-200 opacity-40">
+                    <div class="flex items-center space-x-3 truncate">
+                        <div class="text-xl flex-shrink-0">🥉</div>
+                        <div class="truncate">
+                            <p class="text-sm font-semibold text-gray-400 italic">— รอข้อมูลผู้เรียนอันดับ 3 —</p>
+                            <p class="text-xxs text-gray-400 mt-0.5">⏱️ 0 วินาที</p>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0 pl-2 text-gray-400 font-bold text-base">0<span class="text-xxs">/10</span></div>
+                </div>
+                <!-- อันดับ 4 -->
+                <div id="rankCard-4" class="flex justify-between items-center p-3 rounded-xl bg-gray-50 border border-gray-200 opacity-40">
+                    <div class="flex items-center space-x-3 truncate">
+                        <div class="text-xl flex-shrink-0"><span class="bg-gray-200 text-gray-400 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">4</span></div>
+                        <div class="truncate pl-1">
+                            <p class="text-sm font-semibold text-gray-400 italic">— รอข้อมูลผู้เรียนอันดับ 4 —</p>
+                            <p class="text-xxs text-gray-400 mt-0.5">⏱️ 0 วินาที</p>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0 pl-2 text-gray-400 font-bold text-base">0<span class="text-xxs">/10</span></div>
+                </div>
+                <!-- อันดับ 5 -->
+                <div id="rankCard-5" class="flex justify-between items-center p-3 rounded-xl bg-gray-50 border border-gray-200 opacity-40">
+                    <div class="flex items-center space-x-3 truncate">
+                        <div class="text-xl flex-shrink-0"><span class="bg-gray-200 text-gray-400 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">5</span></div>
+                        <div class="truncate pl-1">
+                            <p class="text-sm font-semibold text-gray-400 italic">— รอข้อมูลผู้เรียนอันดับ 5 —</p>
+                            <p class="text-xxs text-gray-400 mt-0.5">⏱️ 0 วินาที</p>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0 pl-2 text-gray-400 font-bold text-base">0<span class="text-xxs">/10</span></div>
+                </div>
+            </div>
         </div>
-        
-        <div class="mb-3">
-          <label class="form-label">เบอร์โทรศัพท์ติดต่อ</label>
-          <input type="tel" class="form-control" id="inp_phone" required placeholder="08XXXXXXXX" pattern="[0-9]{9,10}">
+
+        <!-- โซนที่ 2: ตารางรายชื่อผู้สอบทั้งหมด แสดงแค่ชื่อผลการสอบผ่าน/ไม่ผ่าน -->
+        <div class="bg-white rounded-2xl p-4 shadow-lg border border-gray-200">
+            <h2 class="text-base sm:text-lg font-bold text-gray-700 mb-3">
+                👥 รายชื่อผู้เข้ารับการทดสอบทั้งหมดในคลาสเรียน
+            </h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs sm:text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200 text-gray-500 font-semibold bg-gray-50">
+                            <th class="p-2.5">ชื่อ - นามสกุล</th>
+                            <th class="p-2.5 text-center">ประเภท</th>
+                            <th class="p-2.5 text-center">ผลการสอบ (Col E)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody" class="divide-y divide-gray-100">
+                        <tr>
+                            <td colspan="3" class="p-4 text-center text-gray-400 italic">ไม่มีรายชื่อผู้ลงทะเบียนทดสอบในฐานข้อมูล</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        
-        <div class="mb-3">
-          <label class="form-label">อีเมลติดต่อ <span class="text-danger small">(แนะนำให้ใช้ @gmail.com เท่านั้น)</span></label>
-          <input type="email" class="form-control" id="inp_email" required placeholder="example@gmail.com">
-        </div>
-        
-        <div class="mb-4">
-          <label class="form-label">หลักสูตรและรอบวันที่ต้องการเข้าอบรม</label>
-          <select class="form-select" id="date" required>
-            <option value="">กำลังโหลดรายการหลักสูตรจากศูนย์การเรียนรู้...</option>
-          </select>
-        </div>
-        
-        <button type="button" class="btn btn-submit shadow-sm fs-5" onclick="showConfirm()">ลงทะเบียนเข้าร่วมอบรม</button>
-      </form>
+
     </div>
-  </main>
 
-  <div class="modal fade" id="confirmModal" tabindex="-1" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="border-radius: 20px; overflow: hidden; border: none;">
-        <div class="modal-header bg-primary text-white py-3">
-          <h5 class="modal-title fw-bold"><i class="fas fa-user-check me-2"></i>ตรวจสอบข้อมูลการลงทะเบียน</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4" id="confirmData"></div>
-        <div class="modal-footer bg-light border-top-0">
-          <button type="button" class="btn btn-link text-muted text-decoration-none fw-bold" data-bs-dismiss="modal">แก้ไขข้อมูล</button>
-          <button type="button" class="btn btn-primary px-4 rounded-pill fw-bold" id="confirmBtn" onclick="submitForm()">ยืนยันข้อมูลข้อมูล</button>
-        </div>
-      </div>
-    </div>
-  </div>
+    <script>
+        // ⚠️ นำลิงก์ Web App URL ตัวล่าสุดของ GAS มาใส่ตรงนี้
+        const API_URL = "https://script.google.com/macros/s/AKfycbz1wwa1HnTWoLghwEAUJnaB7hnZ5SUnJv1H1RBI6bBjscpb9fV0Jwn9RO9MvWkkPhGX/exec";
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        function fetchDashboardData() {
+            const timerText = document.getElementById('refreshTimerText');
+            timerText.innerText = "🔄 กำลังยิงดึงข้อมูลแบบเรียลไทม์...";
+            timerText.className = "text-red-600 font-medium";
 
-  <script>
-    const SUPABASE_URL = "https://knfhgytkfshdmfdieczx.supabase.co"; 
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZmhneXRrZnNoZG1mZGllY3p4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NDI4ODUsImV4cCI6MjA5NDQxODg4NX0.NnYLZB5agt5wjLs2vn62K5v9LnvO01BV3iCJhh-QRTE"; 
-    const GOOGLE_SHEET_API = "https://script.google.com/macros/s/AKfycbybDrwPwdjzpdrg_qTJ7Em8B4x-lFcPPCF871VE9siziL4xee_Aewotgn-CtY9_lNF-/exec"; 
+            // ใช้คำสั่ง fetch ดึงข้อมูลผ่านสถาปัตยกรรมสากล ปลอดภัยและไม่ค้างคา
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(data => {
+                    renderDashboard(data);
+                    timerText.innerText = "รีเฟรชข้อมูลอัตโนมัติทุกๆ 15 วินาที";
+                    timerText.className = "text-gray-500";
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    timerText.innerText = "⚠️ เชื่อมต่อ API ล้มเหลว";
+                    timerText.className = "text-red-500 font-bold";
+                });
+        }
 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
-    let loadedSessions = []; 
+        function resetLeaderboardToPlaceholder() {
+            for (let rank = 1; rank <= 5; rank++) {
+                const card = document.getElementById(`rankCard-${rank}`);
+                if (!card) continue;
+                card.className = "flex justify-between items-center p-3 rounded-xl bg-gray-50 border border-gray-200 opacity-40";
+                let badge = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span class="bg-gray-200 text-gray-400 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">${rank}</span>`;
+                card.innerHTML = `
+                    <div class="flex items-center space-x-3 truncate">
+                        <div class="text-xl flex-shrink-0">${badge}</div>
+                        <div class="truncate">
+                            <p class="text-sm font-semibold text-gray-400 italic">— รอข้อมูลผู้เรียนอันดับ ${rank} —</p>
+                            <p class="text-xxs text-gray-400 mt-0.5">⏱️ 0 วินาที</p>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0 pl-2 text-gray-400 font-bold text-base">0<span class="text-xxs">/10</span></div>
+                `;
+            }
+        }
 
-    window.addEventListener('DOMContentLoaded', loadSessions);
+        function renderDashboard(data) {
+            const tableBody = document.getElementById('studentTableBody');
+            
+            if (!data || data.error || !data.topPerformers || data.topPerformers.length === 0) {
+                resetLeaderboardToPlaceholder();
+            } else {
+                resetLeaderboardToPlaceholder(); 
+                
+                data.topPerformers.forEach((student, index) => {
+                    const rank = index + 1;
+                    const card = document.getElementById(`rankCard-${rank}`);
+                    if (!card) return;
 
-    // ดึงรายชื่อหลักสูตรรอบอบรมจากตารางแอดมินมาประกอบร่าง Dropdown
-    async function loadSessions() {
-      const dateSelect = document.getElementById('date');
-      try {
-        const { data: sessions, error } = await supabaseClient.from('sessions').select('*').eq('status', 'Active').order('id', { ascending: true });
-        if (error) throw error;
-        
-        loadedSessions = sessions;
-        dateSelect.innerHTML = '<option value="">-- เลือกหลักสูตรและรอบวันเวลา --</option>';
-        
-        sessions.forEach(session => {
-          const option = document.createElement('option');
-          option.value = session.id; 
-          let statusText = `(ว่าง ${session.available_seats}/${session.max_seats} ที่นั่ง)`;
-          if (session.available_seats <= 0) { option.disabled = true; statusText = `(ที่นั่งเต็มแล้ว)`; }
-          
-          // 🌟 ดึงฟอร์แมตโครงสร้าง Name (หลักสูตร) และ Date (วันที่จัด พ.ศ.) มาประกอบอย่างลงตัว
-          option.textContent = `📘 ${session.name} [รอบ: ${session.date}] ${statusText}`;
-          dateSelect.appendChild(option);
-        });
-      } catch (error) { 
-        console.error("โหลดข้อมูลรอบอบรมไม่สำเร็จ: ", error); 
-        dateSelect.innerHTML = '<option value="">❌ เกิดข้อผิดพลาดขัดข้องในการโหลดข้อมูลอบรม</option>';
-      }
-    }
+                    let badge = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span class="bg-gray-200 text-gray-500 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">${rank}</span>`;
+                    let styleClass = 'bg-gray-50 border border-gray-200 text-gray-700';
+                    let textHighlight = 'text-gray-800 font-semibold';
+                    let padClass = (rank >= 4) ? 'pl-1' : '';
 
-    function showConfirm() {
-      const form = document.getElementById('regForm');
-      const emailInput = document.getElementById('inp_email');
-      emailInput.value = emailInput.value.trim();
-      
-      if(!form.checkValidity()) { form.reportValidity(); return; }
+                    if (rank === 1) {
+                        styleClass = 'bg-gold-gradient text-white shadow-md badge-pulse';
+                        textHighlight = 'text-white font-bold';
+                    } else if (rank === 2) {
+                        styleClass = 'bg-gray-700 text-white shadow-sm';
+                        textHighlight = 'text-white font-semibold';
+                    } else if (rank === 3) {
+                        styleClass = 'bg-red-card text-red-900 shadow-xs';
+                        textHighlight = 'text-red-900 font-semibold';
+                    }
 
-      const prefix = document.getElementById('inp_prefix').value;
-      const name = document.getElementById('inp_name').value;
-      const selectedSession = loadedSessions.find(s => s.id == document.getElementById('date').value);
+                    card.className = `flex justify-between items-center p-3 rounded-xl transition duration-150 ${styleClass}`;
+                    card.innerHTML = `
+                        <div class="flex items-center space-x-3 truncate">
+                            <div class="text-xl flex-shrink-0">${badge}</div>
+                            <div class="truncate ${padClass}">
+                                <p class="text-sm truncate ${textHighlight}">${student.prefix}${student.fullName}</p>
+                                <p class="text-xxs ${rank <= 2 ? 'text-gray-200' : 'text-gray-500'} mt-0.5">
+                                    ⏱️ ${student.timeSpent} วินาที
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-right flex-shrink-0 pl-2">
+                            <span class="text-base font-bold ${rank <= 2 ? 'text-white' : 'text-red-700'}">${student.score}</span>
+                            <span class="text-xxs ${rank <= 2 ? 'text-gray-200' : 'text-gray-500'}">/10</span>
+                        </div>
+                    `;
+                });
+            }
 
-      document.getElementById('confirmData').innerHTML = `
-        <p class="mb-2"><span class="confirm-label">ชื่อ - นามสกุล:</span> <b class="text-dark">${prefix}${name}</b></p>
-        <p class="mb-2"><span class="confirm-label">เบอร์โทรศัพท์:</span> <b class="text-dark">${document.getElementById('inp_phone').value}</b></p>
-        <p class="mb-2"><span class="confirm-label">อีเมลติดต่อ:</span> <b class="text-dark">${emailInput.value}</b></p>
-        <hr>
-        <p class="mb-1 text-muted small fw-bold">หลักสูตรศึกษาอบรมที่เลือก:</p>
-        <div class="p-3 bg-light border text-center fw-bold text-primary rounded-3 fs-6">
-            ${selectedSession.name}<br>
-            <span class="text-muted small fw-normal">ตารางจัด: ${selectedSession.date}</span>
-        </div>`;
-      confirmModal.show();
-    }
+            // 2. เรนเดอร์รายชื่อพนักงานทั้งหมด (แสดงผลเฉพาะคอลัมน์ E ผ่าน/ไม่ผ่าน ตามเงื่อนไขบรีฟ)
+            if (!data || !data.allStudents || data.allStudents.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400 italic">ไม่มีรายชื่อผู้ลงทะเบียนทดสอบในฐานข้อมูล</td></tr>`;
+            } else {
+                tableBody.innerHTML = '';
+                data.allStudents.forEach(student => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-50 transition duration-100";
+                    
+                    let statusBadge = '';
+                    if (student.testType === "Pre-test") {
+                        statusBadge = `<span class="text-blue-600 font-medium">—</span>`;
+                    } else {
+                        statusBadge = student.status === "ผ่าน" 
+                            ? `<span class="bg-green-100 text-green-700 border border-green-200 px-2.5 py-0.5 rounded-full text-xs font-bold">ผ่าน</span>`
+                            : `<span class="bg-red-100 text-red-700 border border-red-200 px-2 py-0.5 rounded-full text-xs font-bold">ไม่ผ่าน</span>`;
+                    }
 
-    async function submitForm() {
-      const btn = document.getElementById('confirmBtn');
-      // 🔒 สั่งล็อกปุ่มทันทีเพื่อป้องกันการกดเบิ้ลส่งข้อมูลซ้ำซ้อนซ้อนแถว
-      btn.disabled = true; 
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> กำลังบันทึกข้อมูล...';
+                    tr.innerHTML = `
+                        <td class="p-3 max-w-xs truncate font-medium text-gray-700 text-xs sm:text-sm">
+                            ${student.prefix}${student.fullName}
+                        </td>
+                        <td class="p-3 text-center text-xs text-gray-500 font-semibold">
+                            ${student.testType}
+                        </td>
+                        <td class="p-3 text-center">
+                            ${statusBadge}
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            }
+        }
 
-      const prefix = document.getElementById('inp_prefix').value;
-      const fullName = document.getElementById('inp_name').value;
-      const phone = document.getElementById('inp_phone').value;
-      const email = document.getElementById('inp_email').value;
-      const sessionId = document.getElementById('date').value;
-
-      try {
-        // 1. ตรวจสอบโควตาวันหมดเขต/ที่นั่งแบบเรียลไทม์ด่านสุดท้ายก่อนบันทึกจริง
-        const { data: currentSession, error: checkError } = await supabaseClient.from('sessions').select('available_seats, name, date').eq('id', sessionId).single();
-        if (checkError) throw checkError;
-        if (currentSession.available_seats <= 0) throw new Error("ขออภัยด้วยครับ รอบการอบรมหลักสูตรนี้ที่นั่งเต็มแล้ว ณ จังหวะที่คุณกดยืนยัน");
-
-        // 2. ยิงข้อมูลผู้สมัครเข้าตารางฐานข้อมูลหลักของ Supabase
-        const { data: insertedData, error: insertError } = await supabaseClient.from('registrations').insert([{ prefix, full_name: fullName, phone, email, session_id: parseInt(sessionId) }]).select('id').single();
-        if (insertError) throw insertError;
-        const generatedRegId = insertedData.id; // ดึงรหัส REG ID 6 หลักที่ระบบดีบีสุ่มสร้างให้อัตโนมัติ
-
-        // 3. หักลบโควตาที่นั่งว่างคงเหลือออก 1 ที่นั่ง
-        await supabaseClient.from('sessions').update({ available_seats: currentSession.available_seats - 1 }).eq('id', sessionId);
-
-        // 4. ส่งผ่านข้อมูลคู่ขนานข้ามแพลตฟอร์มไปหา Google Apps Script API เพื่อบันทึกกูเกิลชีตและส่งอีเมล QR Code หาผู้สมัคร
-        const fullSessionString = `${currentSession.name} (${currentSession.date})`;
-        fetch(GOOGLE_SHEET_API, {
-          method: "POST",
-          mode: "no-cors",
-          body: new URLSearchParams({ "action": "registerOnline", "id": generatedRegId, prefix, fullName, phone, email, "sessionName": fullSessionString })
-        });
-
-        // 5. ปิดม่านป๊อปอัพและแสดงหน้าต่างความสำเร็จพรีเมียม
-        confirmModal.hide();
-        document.getElementById('displayResId').innerText = generatedRegId;
-        document.getElementById('successOverlay').style.display = 'flex';
-        document.getElementById('regForm').reset();
-      } catch (err) { 
-        alert("ระบบขัดข้อง: " + err.message); 
-        btn.disabled = false; 
-        btn.innerHTML = 'ยืนยันข้อมูลข้อมูล'; 
-      }
-    }
-  </script>
+        // รันคำสั่งดึงข้อมูลทันทีเมื่อโหลดหน้าเว็บ
+        fetchDashboardData();
+        // รีเฟรชอัตโนมัติเบื้องหลังทุกๆ 15 วินาที
+        setInterval(fetchDashboardData, 15000);
+    </script>
 </body>
 </html>
